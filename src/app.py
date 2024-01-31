@@ -51,6 +51,14 @@ def get_all_user():
     all_users = list(map(lambda x: x.serialize(), users))
     return jsonify(all_users), 200
 
+@app.route('/create-user', methods=['POST'])
+def create_user():
+    request_body = request.get_json()
+    user_data = User(email=request_body['email'], password=request_body['password'], is_active=request_body['active'])
+    db.session.add(user_data)
+    db.session.commit()
+    return jsonify(request_body), 200
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
