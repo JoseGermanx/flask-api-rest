@@ -58,6 +58,20 @@ def create_user():
     db.session.add(user_data)
     db.session.commit()
     return jsonify(request_body), 200
+@app.route('/update/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    request_body = request.get_json()
+    user = User.query.get(user_id)
+    if user is None:
+        raise APIException('Id de usuario no existe', status_code=400)
+    
+    if "email" in request_body:
+        user.email = request_body['email']
+    if "password" in request_body:
+        user.password = request_body['password']
+    db.session.commit()
+
+    return jsonify(request_body), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
